@@ -190,24 +190,19 @@ class SmsApi
      * Get an instance of \Ovh\Sms\Message
      * to create a new message to send
      *
-     * @return \Ovh\Sms\Message
-     */
-    public function createMessageToSend()
-    {
-        return new \Ovh\Sms\Message($this);
-    }
-
-
-    /**
-     * Get an instance of \Ovh\Sms\MessageForResponse
-     * to create a new message to send that will allow 
-     * the recipient to answer
+     * @param boolean allowingAnswer Whether or not the message 
+     *                               will allow the recipient to answer
      *
-     * @return \Ovh\Sms\MessageForResponse
+     * @return \Ovh\Sms\Message or \Ovh\Sms\MessageForResponse
      */
-    public function createMessageToSendForResponse()
+    public function createMessage($allowingAnswer = false)
     {
-        return new \Ovh\Sms\MessageForResponse($this);
+        if ($allowingAnswer)
+        {
+            return new \Ovh\Sms\MessageForResponse($this);
+        }
+
+        return new \Ovh\Sms\Message($this);
     }
 
 
