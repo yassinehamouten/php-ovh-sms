@@ -131,7 +131,123 @@ class SmsApiTest
     {
         $Sms = new SmsApi($this->application_key, $this->application_secret, $this->endpoint, $this->consumer_key);
 
-        $this->assertInstanceOf('\\Ovh\\Api', $api->getConnection());
+        $this->assertInstanceOf('\\Ovh\\Api', $Sms->getConnection());
+    }
+
+    /**
+     * Test add sender with no account set
+     */
+    public function testAddSenderNoAccount()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "Please set account before using this function");
+
+        $Sms = new SmsApi($this->application_key, $this->application_secret, $this->endpoint, $this->consumer);
+        $Sms->addSender("test", "test", "test");
+    }
+
+    /**
+     * Test creating new message for response and set a sender
+     */
+    public function testCreateMessageForResponse()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "Sender is incompatible with message for response");
+
+        $Sms = new SmsApi($this->application_key, $this->application_secret, $this->endpoint, $this->consumer);
+
+        $Message = $Sms->createMessage(true);
+        $this->assertInstanceOf('\\Ovh\\Sms\\MessageForRespose', $Message);
+
+        $Message->setSender("test");
+    }
+
+    /**
+     * Test creating a new message and set a delivery date in the past
+     */
+    public function testSetDeliveryTimeInThePast()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "Date parameter can't be in the past");
+
+        $Sms = new SmsApi($this->application_key, $this->application_secret, $this->endpoint, $this->consumer);
+
+        $Message = $Sms->createMessage();
+        $this->assertInstanceOf('\\Ovh\\Sms\\Message', $Message);
+
+        $Message->setDeliveryDate(new \DateTime("1970-01-01 00:00:01"));
+    }
+
+    /**
+     * Test creating a new message and adding a receiver that is not a number
+     */
+    public function testAddWrongReceiver()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "Receiver parameter must be a valid international phone number");
+
+        $Sms = new SmsApi($this->application_key, $this->application_secret, $this->endpoint, $this->consumer);
+
+        $Message = $Sms->createMessage();
+        $this->assertInstanceOf('\\Ovh\\Sms\\Message', $Message);
+
+        $Message->addReceiver("test");
+    }
+
+    /**
+     * Test creating a new message and adding two times the same receiver
+     */
+    public function testAddReceiverMultipleTimes()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "Receiver parameter has already been added to the receivers of this message");
+
+        $Sms = new SmsApi($this->application_key, $this->application_secret, $this->endpoint, $this->consumer);
+
+        $Message = $Sms->createMessage();
+        $this->assertInstanceOf('\\Ovh\\Sms\\Message', $Message);
+
+        $Message->addReceiver("+33612345678");
+        $Message->addReceiver("+33612345678");
+    }
+
+    /**
+     * Test creating Sms if SmsApi is not provided
+     */
+    public function testSmsApiCreation()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "SmsApi parameter is empty");
+
+        $Sms = new Sms();
+    }
+
+    /**
+     * Test creating Sms if type is not provided
+     */
+    public function testSmsTypeCreation()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "Type parameter is empty");
+
+        $Sms = new SmsApi($this->application_key, $this->application_secret, $this->endpoint, $this->consumer);
+
+        $Sms = new Sms($Sms);
+    }
+
+    /**
+     * Test creating Sms if id is not provided
+     */
+    public function testSmsIdCreation()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "Id parameter is empty");
+
+        $Sms = new SmsApi($this->application_key, $this->application_secret, $this->endpoint, $this->consumer);
+
+        $Sms = new Sms($Sms, "incoming");
+    }
+
+    /**
+     * Test creating Sms if SmsApi is not of SmsApi type
+     */
+    public function testSmsApiNotApiCreation()
+    {
+        $this->setExpectedException('\\Ovh\\Exceptions\\InvalidParameterException', "SmsApi parameter must be a SmsApi object");
+
+        $Sms = new Sms("test", "incoming", 0);
     }
 
 }
