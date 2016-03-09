@@ -30,8 +30,6 @@
 
 namespace Ovh\Sms;
 
-use Ovh\Api;
-
 /**
  * Class to manage a new message to send for response
  *

@@ -146,20 +146,16 @@ class Sms
         $type,
         $id
     ) {
-        if (!isset($SmsApi))
-        {
+        if (!isset($SmsApi)) {
             throw new \Ovh\Exceptions\InvalidParameterException("SmsApi parameter is empty");
         }
-        if (!isset($type))
-        {
+        if (!isset($type)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Type parameter is empty");
         }
-        if (!isset($id))
-        {
+        if (!isset($id)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Id parameter is empty");
         }
-        if (!is_a($SmsApi, "Ovh\Sms\SmsApi"))
-        {
+        if (!is_a($SmsApi, "Ovh\Sms\SmsApi")) {
             throw new \Ovh\Exceptions\InvalidParameterException("SmsApi parameter must be a SmsApi object");
         }
 
@@ -334,14 +330,12 @@ class Sms
         $this->sendDateTime     = null;
         $this->tag              = $messageDetails['tag'];
 
-        if (in_array($this->type, array('planned', 'outgoing')))
-        {
+        if (in_array($this->type, array('planned', 'outgoing'))) {
             $this->ptt              = $messageDetails['ptt'];
             $this->deliveryReceipt  = $messageDetails['deliveryReceipt'];
             $this->sendDateTime     = $this->creationDateTime;
 
-            if ($messageDetails['differedDelivery'] > 0)
-            {
+            if ($messageDetails['differedDelivery'] > 0) {
                 $this->sendDateTime->add(new DateInterval('PT'.$messageDetails['differedDelivery'].'M'));
             }
         }

@@ -88,27 +88,24 @@ class SmsApi
     /**
      * Request a new sender
      *
-     * @param string $sender The sender to add
-     * @param string $reason A short and descriptive reason why to add the sender
+     * @param string $sender      The sender to add
+     * @param string $reason      A short and descriptive reason why to add the sender
      * @param string $description A description of the sender
      *
      * @return void
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \GuzzleHttp\Exception\ClientException     if http request returns an error
      * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function addSender($sender, $reason, $description = "")
     {
-        if (is_null($this->account))
-        {
+        if (is_null($this->account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
         }
 
-        if (!isset($sender))
-        {
+        if (!isset($sender)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Sender parameter is empty");
         }
-        if (!isset($reason))
-        {
+        if (!isset($reason)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Reason parameter is empty");
         }
 
@@ -127,24 +124,19 @@ class SmsApi
      */
     public function checkAccount($account)
     {
-        if (!isset($account))
-        {
+        if (!isset($account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Account parameter is empty");
         }
-        
-        try
-        {
+
+        try {
             $details = $this->getAccountDetails($account);
 
-            if ($details['status'] != "enable")
-            {
+            if ($details['status'] != "enable") {
                 return false;
             }
 
             return true;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -159,28 +151,22 @@ class SmsApi
      */
     public function checkSender($sender)
     {
-        if (is_null($this->account))
-        {
+        if (is_null($this->account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
         }
-        if (!isset($sender))
-        {
+        if (!isset($sender)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Sender parameter is empty");
         }
-        
-        try
-        {
+
+        try {
             $details = $this->getSenderDetails($sender);
 
-            if ($details['status'] != "enable")
-            {
+            if ($details['status'] != "enable") {
                 return false;
             }
 
             return true;
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -190,15 +176,14 @@ class SmsApi
      * Get an instance of \Ovh\Sms\Message
      * to create a new message to send
      *
-     * @param boolean allowingAnswer Whether or not the message 
+     * @param boolean allowingAnswer Whether or not the message
      *                               will allow the recipient to answer
      *
      * @return \Ovh\Sms\Message or \Ovh\Sms\MessageForResponse
      */
     public function createMessage($allowingAnswer = false)
     {
-        if ($allowingAnswer)
-        {
+        if ($allowingAnswer) {
             return new \Ovh\Sms\MessageForResponse($this);
         }
 
@@ -218,10 +203,8 @@ class SmsApi
     {
         $accounts = $this->conn->get("/sms");
 
-        if ($details)
-        {
-            foreach ($accounts as $id => $account)
-            {
+        if ($details) {
+            foreach ($accounts as $id => $account) {
                 $accounts[$id] = $this->getAccountDetails($account);
             }
         }
@@ -264,10 +247,10 @@ class SmsApi
      */
     public function getAccount()
     {
-        if (is_null($this->account))
-        {
+        if (is_null($this->account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
         }
+
         return $this->account;
     }
 
@@ -276,51 +259,44 @@ class SmsApi
      * Get incoming messages
      *
      * @param DateTime $startDateTime Start of the filter interval on the creation date
-     * @param DateTime $endDateTime End of the filter interval on the creation date
-     * @param string $sender Filter on the sender
-     * @param string $tag Filter on the tag
+     * @param DateTime $endDateTime   End of the filter interval on the creation date
+     * @param string   $sender        Filter on the sender
+     * @param string   $tag           Filter on the tag
      *
      * @return array
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \GuzzleHttp\Exception\ClientException     if http request returns an error
      * @throws \Ovh\Exceptions\InvalidParameterException if account is not set or parameters are invalid
      */
     public function getIncomingMessages($startDateTime = null, $endDateTime = null, $sender = null, $tag = null)
     {
-        if (is_null($this->account))
-        {
+        if (is_null($this->account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
         }
 
         // Check and prepare parameters
         $parameters = array();
 
-        if (!is_null($startDateTime))
-        {
-            if (!is_a($startDateTime, "DateTime"))
-            {
+        if (!is_null($startDateTime)) {
+            if (!is_a($startDateTime, "DateTime")) {
                 throw new \Ovh\Exceptions\InvalidParameterException("StartDateTime parameter must be a DateTime object");
             }
 
             $parameters['creationDatetime.from'] = $startDateTime->format(\DateTime::RFC3339);
         }
 
-        if (!is_null($endDateTime))
-        {
-            if (!is_a($endDateTime, "DateTime"))
-            {
+        if (!is_null($endDateTime)) {
+            if (!is_a($endDateTime, "DateTime")) {
                 throw new \Ovh\Exceptions\InvalidParameterException("EndDateTime parameter must be a DateTime object");
             }
 
             $parameters['creationDatetime.to'] = $endDateTime->format(\DateTime::RFC3339);
         }
 
-        if (!is_null($sender))
-        {
+        if (!is_null($sender)) {
             $parameters['sender'] = $sender;
         }
 
-        if (!is_null($tag))
-        {
+        if (!is_null($tag)) {
             $parameters['tag'] = $tag;
         }
 
@@ -328,8 +304,7 @@ class SmsApi
         // Get messages
         $messages = $this->conn->get("/sms/".$this->account."/incoming", (object) $parameters);
 
-        foreach ($messages as $id => $message)
-        {
+        foreach ($messages as $id => $message) {
             $messages[$id] = new Sms($this, "incoming", $message);
         }
 
@@ -341,13 +316,13 @@ class SmsApi
      * Get outgoing messages
      *
      * @param DateTime $startDateTime Start of the filter interval on the creation date
-     * @param DateTime $endDateTime End of the filter interval on the creation date
-     * @param string $sender Filter on the sender
-     * @param string $receiver Filter on the receiver
-     * @param string $tag Filter on the tag
+     * @param DateTime $endDateTime   End of the filter interval on the creation date
+     * @param string   $sender        Filter on the sender
+     * @param string   $receiver      Filter on the receiver
+     * @param string   $tag           Filter on the tag
      *
      * @return array
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \GuzzleHttp\Exception\ClientException     if http request returns an error
      * @throws \Ovh\Exceptions\InvalidParameterException if account is not set or parameters are invalid
      */
     public function getOutgoingMessages($dateStart = null, $dateEnd = null, $sender = null, $receiver = null, $tag = null)
@@ -359,33 +334,27 @@ class SmsApi
         // Check and prepare parameters
         $parameters = array();
 
-        if (!is_null($startDateTime))
-        {
-            if (!is_a($startDateTime, "DateTime"))
-            {
+        if (!is_null($startDateTime)) {
+            if (!is_a($startDateTime, "DateTime")) {
                 throw new \Ovh\Exceptions\InvalidParameterException("StartDateTime parameter must be a DateTime object");
             }
 
             $parameters['creationDatetime.from'] = $startDateTime->format(\DateTime::RFC3339);
         }
 
-        if (!is_null($endDateTime))
-        {
-            if (!is_a($endDateTime, "DateTime"))
-            {
+        if (!is_null($endDateTime)) {
+            if (!is_a($endDateTime, "DateTime")) {
                 throw new \Ovh\Exceptions\InvalidParameterException("EndDateTime parameter must be a DateTime object");
             }
 
             $parameters['creationDatetime.to'] = $endDateTime->format(\DateTime::RFC3339);
         }
 
-        if (!is_null($sender))
-        {
+        if (!is_null($sender)) {
             $parameters['sender'] = $sender;
         }
 
-        if (!is_null($tag))
-        {
+        if (!is_null($tag)) {
             $parameters['tag'] = $tag;
         }
 
@@ -404,7 +373,7 @@ class SmsApi
      * Get planned
      *
      * @return array
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \GuzzleHttp\Exception\ClientException     if http request returns an error
      * @throws \Ovh\Exceptions\InvalidParameterException if account is not set or parameters are invalid
      */
     public function getPlannedMessages()
@@ -427,32 +396,28 @@ class SmsApi
     /**
      * Get price for a destination
      *
-     * @param string $country Country where to send the SMS
+     * @param string $country         Country where to send the SMS
      * @param string $countryCurrency Country of the currency you want the price in
-     * @param int $quantity Quantity of SMS in the pack
+     * @param int    $quantity        Quantity of SMS in the pack
      *
      * @return array
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \GuzzleHttp\Exception\ClientException     if http request returns an error
      * @throws \Ovh\Exceptions\InvalidParameterException if account is not set or parameters are invalid
      */
     public function getPrice($country, $countryCurrency, $quantity)
     {
-        if (is_null($this->account))
-        {
+        if (is_null($this->account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
         }
 
         // Check and prepare parameters
-        if (!isset($country))
-        {
+        if (!isset($country)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Country parameter is empty");
         }
-        if (!isset($countryCurrency))
-        {
+        if (!isset($countryCurrency)) {
             throw new \Ovh\Exceptions\InvalidParameterException("CountryCurrency parameter is empty");
         }
-        if (!isset($quantity))
-        {
+        if (!isset($quantity)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Quantity parameter is empty");
         }
 
@@ -472,24 +437,20 @@ class SmsApi
      */
     public function getSenders($details = false)
     {
-        if (is_null($this->account))
-        {
+        if (is_null($this->account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
         }
 
         $senders = $this->conn->get("/sms/".$this->account."/senders");
 
-        if ($details)
-        {
-            foreach ($senders as $id => $sender)
-            {
+        if ($details) {
+            foreach ($senders as $id => $sender) {
                 $senders[$id] = $this->getAccountDetails($sender);
             }
         }
 
         return $senders;
     }
-
 
     /**
      * Get details for a sender
@@ -501,19 +462,16 @@ class SmsApi
      */
     public function getSenderDetails($sender)
     {
-        if (is_null($this->account))
-        {
+        if (is_null($this->account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
         }
 
-        if (!isset($sender))
-        {
+        if (!isset($sender)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Sender parameter is empty");
         }
 
         return $this->conn->get("/sms/".$this->account."/senders/$sender");
     }
-
 
     /**
      * Set account to work on
@@ -525,13 +483,11 @@ class SmsApi
      */
     public function setAccount($account)
     {
-        if (!isset($account))
-        {
+        if (!isset($account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Account parameter is empty");
         }
 
-        if (!$this->checkAccount($account))
-        {
+        if (!$this->checkAccount($account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Account parameter is invalid");
         }
 

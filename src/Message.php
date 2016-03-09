@@ -35,7 +35,7 @@ use Ovh\Api;
 /**
  * Class to manage a new message to send
  *
- * This class provides all methods to create a new message 
+ * This class provides all methods to create a new message
  * and send it through OVH API to one or many receipients.
  *
  * @package  Ovh\Sms
@@ -94,18 +94,15 @@ class Message
      */
     public function __construct($SmsApi)
     {
-        if (!isset($SmsApi))
-        {
+        if (!isset($SmsApi)) {
             throw new \Ovh\Exceptions\InvalidParameterException("SmsApi parameter is empty");
         }
-        if (!is_a($SmsApi, "Ovh\Sms\SmsApi"))
-        {
+        if (!is_a($SmsApi, "Ovh\Sms\SmsApi")) {
             throw new \Ovh\Exceptions\InvalidParameterException("SmsApi parameter must be a SmsApi object");
         }
 
         $this->Sms = $SmsApi;
     }
-
 
     /**
      * Add a receiver to the message
@@ -130,7 +127,6 @@ class Message
         array_push($this->receivers, $receiver);
     }
 
-
     /**
      * Send the message
      *
@@ -138,7 +134,7 @@ class Message
      *
      * @return array
      * @throws \Ovh\Exceptions\InvalidParameterException if a parameter is invalid
-     * @throws \GuzzleHttp\Exception\ClientException if http request is an error
+     * @throws \GuzzleHttp\Exception\ClientException     if http request is an error
      */
     public function send($message)
     {
@@ -162,7 +158,6 @@ class Message
         // Prepare request parameters
         $parameters = (object) array('message' => $message, 'receivers' => $this->receivers, 'noStopClause' => !$this->marketing, 'differedPeriod' => $differedPeriod, 'coding' => $coding, 'tag' => $this->tag);
 
-
         // Manage sender
         if ($this->sender) {
             $parameters->sender = $this->sender;
@@ -172,7 +167,6 @@ class Message
 
         return $this->Sms->getConnection()->post("/sms/".$this->Sms->getAccount()."/jobs", $parameters);
     }
-
 
     /**
      * Set the delivery date of the message
@@ -186,8 +180,7 @@ class Message
         if (!isset($dateTime)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Date parameter is empty");
         }
-        if (!is_a($dateTime, "DateTime"))
-        {
+        if (!is_a($dateTime, "DateTime")) {
             throw new \Ovh\Exceptions\InvalidParameterException("Date parameter must be a DateTime object");
         }
 
@@ -201,11 +194,10 @@ class Message
         $this->deliveryDate = $dateTime;
     }
 
-
     /**
      * Set the marketing information of the message
-     * If the message is flaged as marketing, a "STOP" mention will be added 
-     * at the end of the message. Marketing messages will also be delayed 
+     * If the message is flaged as marketing, a "STOP" mention will be added
+     * at the end of the message. Marketing messages will also be delayed
      * to the next open day if sent by night (22h - 8h) or the weekend.
      *
      * @param bool $isMarketing marketing flag of the message
@@ -216,7 +208,6 @@ class Message
     {
         $this->marketing = $isMarketing;
     }
-
 
     /**
      * Set the sender of the message after checking it is a valid sender
