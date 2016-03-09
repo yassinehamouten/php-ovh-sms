@@ -156,7 +156,7 @@ class Message
         $coding = (max(array_map('ord', str_split($message))) > 127) ? '8bit' : '7bit';
 
         // Prepare request parameters
-        $parameters = (object) array('message' => $message, 'receivers' => $this->receivers, 'noStopClause' => !$this->marketing, 'differedPeriod' => $differedPeriod, 'coding' => $coding, 'tag' => $this->tag);
+        $parameters = (object) array('message' => $message, 'receivers' => $this->receivers, 'noStopClause' => !$this->isMarketing, 'differedPeriod' => $differedPeriod, 'coding' => $coding, 'tag' => $this->tag);
 
         // Manage sender
         if ($this->sender) {
