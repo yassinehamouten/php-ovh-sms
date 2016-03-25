@@ -201,7 +201,7 @@ class SmsApi
      */
     public function getAccounts($details = false)
     {
-        $accounts = $this->conn->get("/sms");
+        $accounts = $this->conn->get("/sms/");
 
         if ($details) {
             foreach ($accounts as $id => $account) {
