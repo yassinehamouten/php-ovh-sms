@@ -4,7 +4,7 @@ This PHP package is a SDK for OVH SMS APIs. That's the easiest way to use OVH SM
 ```php
 <?php
 /**
- * # Instantiate. Visit https://api.ovh.com/createToken/index.cgi?GET=/sms/*&PUT=/sms/*&DELETE=/sms/*&POST=/sms/*
+ * # Instantiate. Visit https://api.ovh.com/createToken/index.cgi?GET=/sms&GET=/sms/*&PUT=/sms/*&DELETE=/sms/*&POST=/sms/*
  * to get your credentials
  */
 require __DIR__ . '/vendor/autoload.php';
