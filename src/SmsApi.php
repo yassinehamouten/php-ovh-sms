@@ -61,6 +61,13 @@ class SmsApi
      */
     private $account = null;
 
+     /**
+     * User
+     *
+     * @var string
+     */
+    private $user = null;
+
     /**
      * Construct a new wrapper instance
      *
@@ -174,6 +181,36 @@ class SmsApi
 
 
     /**
+     * Check if an user exists
+     *
+     * @param string $user The user to check
+     *
+     * @return boolean
+     */
+    public function checkUser($user)
+    {
+        if (is_null($this->account)) {
+            throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
+        }
+        if (!isset($user)) {
+            throw new \Ovh\Exceptions\InvalidParameterException("User parameter is empty");
+        }
+
+        try {
+            $details = $this->getUserDetails($user);
+
+            if ($details['quotaInformations']['quotaStatus'] != "active") {
+                return false;
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+
+    /**
      * Get an instance of \Ovh\Sms\Message
      * to create a new message to send
      *
@@ -253,6 +290,17 @@ class SmsApi
         }
 
         return $this->account;
+    }
+
+
+    /**
+     * Get the current user to use
+     *
+     * @return string
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
 
@@ -454,9 +502,55 @@ class SmsApi
     }
 
     /**
+     * Get all users of current SMS account
+     *
+     * @param string $details Get users details or not
+     *
+     * @return array
+     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     */
+    public function getUsers($details = false)
+    {
+        if (is_null($this->account)) {
+            throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
+        }
+
+        $users = $this->conn->get("/sms/".$this->account."/users");
+
+        if ($details) {
+            foreach ($users as $id => $user) {
+                $users[$id] = $this->getUserDetails($user);
+            }
+        }
+
+        return $users;
+    }
+
+    /**
+     * Get details for a user
+     *
+     * @param string $user User to get details
+     *
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     */
+    public function getUserDetails($user)
+    {
+        if (is_null($this->account)) {
+            throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
+        }
+
+        if (!isset($user)) {
+            throw new \Ovh\Exceptions\InvalidParameterException("User parameter is empty");
+        }
+
+        return $this->conn->get("/sms/".$this->account."/users/$user");
+    }
+
+    /**
      * Get details for a sender
      *
-     * @param string $sneder Sender to get details
+     * @param string $sender Sender to get details
      *
      * @return mixed
      * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
@@ -493,5 +587,26 @@ class SmsApi
         }
 
         $this->account = $account;
+    }
+
+    /**
+     * Set user to use
+     *
+     * @param string $user User to use
+     *
+     * @return void
+     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     */
+    public function setUser($user)
+    {
+        if (!isset($user)) {
+            throw new \Ovh\Exceptions\InvalidParameterException("User parameter is empty");
+        }
+
+        if (!$this->checkUser($user)) {
+            throw new \Ovh\Exceptions\InvalidParameterException("User parameter is invalid");
+        }
+
+        $this->user = $user;
     }
 }
