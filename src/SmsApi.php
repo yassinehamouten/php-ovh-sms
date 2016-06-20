@@ -446,7 +446,7 @@ class SmsApi
 
         if ($details) {
             foreach ($senders as $id => $sender) {
-                $senders[$id] = $this->getAccountDetails($sender);
+                $senders[$id] = $this->getSenderDetails($sender);
             }
         }
 
