@@ -181,7 +181,7 @@ class SmsApi
 
 
     /**
-     * Check if an user exists
+     * Check if a user exists
      *
      * @param string $user The user to check
      *
