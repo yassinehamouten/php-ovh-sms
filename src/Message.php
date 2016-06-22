@@ -165,7 +165,7 @@ class Message
             $parameters->senderForResponse = true;
         }
 
-        return $this->Sms->getConnection()->post("/sms/".$this->Sms->getAccount()."/jobs", $parameters);
+        return $this->Sms->getConnection()->post($this->Sms->getUri() . "jobs", $parameters);
     }
 
     /**
