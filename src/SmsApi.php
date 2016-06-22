@@ -211,6 +211,20 @@ class SmsApi
 
 
     /**
+     * Get the URI to use
+     * @return string
+     */
+    public function getUri()
+    {
+        $uri = '/sms/' . $this->account . '/';
+        if (is_null($this->getUser())) {
+            return $uri;
+        }
+        return $uri . 'users/' . $this->getUser() . '/';
+    }
+
+
+    /**
      * Get an instance of \Ovh\Sms\Message
      * to create a new message to send
      *
@@ -351,7 +365,7 @@ class SmsApi
 
 
         // Get messages
-        $messages = $this->conn->get("/sms/".$this->account."/incoming", (object) $parameters);
+        $messages = $this->conn->get($this->getUri() . "incoming", (object) $parameters);
 
         foreach ($messages as $id => $message) {
             $messages[$id] = new Sms($this, "incoming", $message);
@@ -408,7 +422,7 @@ class SmsApi
         }
 
         // Get messages
-        $messages = $this->conn->get("/sms/".$this->account."/outgoing", (object) $parameters);
+        $messages = $this->conn->get($this->getUri() . "outgoing", (object) $parameters);
 
         foreach ($messages as $id => $message) {
             $messages[$id] = new Sms($this, "outgoing", $message);
@@ -416,7 +430,6 @@ class SmsApi
 
         return $messages;
     }
-
 
     /**
      * Get planned
@@ -432,7 +445,7 @@ class SmsApi
         }
 
         // Get messages
-        $messages = $this->conn->get("/sms/".$this->account."/jobs");
+        $messages = $this->conn->get($this->getUri() . "jobs");
 
         foreach ($messages as $id => $message) {
             $messages[$id] = new Sms($this, "jobs", $message);

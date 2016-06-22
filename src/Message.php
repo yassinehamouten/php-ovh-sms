@@ -165,14 +165,7 @@ class Message
             $parameters->senderForResponse = true;
         }
 
-        $uri = "/sms/".$this->Sms->getAccount();
-
-        // Specify user if not null
-        if (!is_null($this->Sms->getUser())) {
-            $uri .= '/users/' . $this->Sms->getUser();
-        }
-
-        return $this->Sms->getConnection()->post("$uri/jobs", $parameters);
+        return $this->Sms->getConnection()->post($this->Sms->getUri() . "jobs", $parameters);
     }
 
     /**
