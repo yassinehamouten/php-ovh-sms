@@ -168,7 +168,7 @@ class Message
         $uri = "/sms/".$this->Sms->getAccount();
 
         // Specify user if not null
-        if (!is_null($this->Sms)) {
+        if (!is_null($this->Sms->getUser())) {
             $uri .= '/users/' . $this->Sms->getUser();
         }
 
