@@ -1,6 +1,6 @@
 {
-  "name": "ovh-php-ovh-sms",
-  "version": "1.0",
+  "name": "yassinehamouten/php-ovh-sms",
+  "version": "1.1",
   "project": "Ovh-Sms",
   "dependencies": {
     "grunt": "~0.4.1",

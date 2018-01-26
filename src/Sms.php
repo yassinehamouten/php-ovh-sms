@@ -328,15 +328,17 @@ class Sms
         $this->price            = $messageDetails['credits'];
         $this->creationDateTime = $messageDetails['creationDatetime'];
         $this->sendDateTime     = null;
-        $this->tag              = $messageDetails['tag'];
+        //$this->tag              = $messageDetails['tag'];
 
-        if (in_array($this->type, array('planned', 'outgoing'))) {
+        if (in_array($this->type, array('planned', 'outgoing', 'jobs'))) {
             $this->ptt              = $messageDetails['ptt'];
             $this->deliveryReceipt  = $messageDetails['deliveryReceipt'];
             $this->sendDateTime     = $this->creationDateTime;
 
             if ($messageDetails['differedDelivery'] > 0) {
-                $this->sendDateTime->add(new DateInterval('PT'.$messageDetails['differedDelivery'].'M'));
+                $date = new \DateTime($this->sendDateTime);
+                $date->add(new \DateInterval('PT' . $messageDetails['differedDelivery'] . 'M'));
+                $this->sendDateTime = $date;
             }
         }
     }

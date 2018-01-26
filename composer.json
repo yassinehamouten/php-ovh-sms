@@ -1,6 +1,6 @@
 {
-    "name": "ovh/php-ovh-sms",
-    "description": "SDK for OVH SMS APIs",
+    "name": "yassinehamouten/php-ovh-sms",
+    "description": "SDK for OVH SMS APIs - HAMOUTEN YASSINE",
     "license": "BSD-3-Clause",
     "require": {
         "ovh/ovh": "~1.1.1"

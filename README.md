@@ -1,3 +1,30 @@
+Install yassinehamouten version
+-------
+
+To download this SDK and integrate it inside your PHP application, you can use [Composer](https://getcomposer.org).
+
+Add the repository in your **composer.json** file or, if you don't already have
+this file, create it at the root of your project with this content:
+
+BEFORE require
+
+```json
+"repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/yassinehamouten/php-ovh-sms"
+        }
+    ],
+```
+IN require
+
+
+```json
+        "yassinehamouten/php-ovh-sms": "dev-master"
+```
+-------
+
+
 # PHP OVH SMS
 
 Send SMS directly from your code using OVH SMS offer.
