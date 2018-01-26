@@ -130,16 +130,11 @@ class Sms
     /**
      * Construct a new wrapper instance
      *
-     * @param string $application_key    key of your application.
-     *                                   For OVH APIs, you can create a application's credentials on
-     *                                   https://api.ovh.com/createApp/
-     * @param string $application_secret secret of your application.
-     * @param string $api_endpoint       name of api selected
-     * @param string $consumer_key       If you have already a consumer key, this parameter prevent to do a
-     *                                   new authentication
-     * @param Client $http_client        instance of http client
+     * @param SmsApi $SmsApi    Contain SmsApi parent object
+     * @param string $type      Type
+     * @param string $id        ID
      *
-     * @throws Exceptions\InvalidParameterException if one parameter is missing or with bad value
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function __construct(
         $SmsApi,

@@ -79,8 +79,6 @@ class SmsApi
      * @param string $consumer_key       If you have already a consumer key, this parameter prevent to do a
      *                                   new authentication
      * @param Client $http_client        instance of http client
-     *
-     * @throws Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function __construct(
         $application_key,
@@ -129,6 +127,7 @@ class SmsApi
      * @param string $account The account to check
      *
      * @return boolean
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function checkAccount($account)
     {
@@ -156,6 +155,7 @@ class SmsApi
      * @param string $sender The sender to check
      *
      * @return boolean
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function checkSender($sender)
     {
@@ -186,6 +186,7 @@ class SmsApi
      * @param string $user The user to check
      *
      * @return boolean
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function checkUser($user)
     {
@@ -378,8 +379,8 @@ class SmsApi
     /**
      * Get outgoing messages
      *
-     * @param DateTime $startDateTime Start of the filter interval on the creation date
-     * @param DateTime $endDateTime   End of the filter interval on the creation date
+     * @param \DateTime $dateStart Start of the filter interval on the creation date
+     * @param \DateTime $dateEnd   End of the filter interval on the creation date
      * @param string   $sender        Filter on the sender
      * @param string   $receiver      Filter on the receiver
      * @param string   $tag           Filter on the tag
@@ -397,20 +398,20 @@ class SmsApi
         // Check and prepare parameters
         $parameters = array();
 
-        if (!is_null($startDateTime)) {
-            if (!is_a($startDateTime, "DateTime")) {
+        if (!is_null($dateStart)) {
+            if (!is_a($dateStart, "DateTime")) {
                 throw new \Ovh\Exceptions\InvalidParameterException("StartDateTime parameter must be a DateTime object");
             }
 
-            $parameters['creationDatetime.from'] = $startDateTime->format(\DateTime::RFC3339);
+            $parameters['creationDatetime.from'] = $dateStart->format(\DateTime::RFC3339);
         }
 
-        if (!is_null($endDateTime)) {
-            if (!is_a($endDateTime, "DateTime")) {
+        if (!is_null($dateEnd)) {
+            if (!is_a($dateEnd, "DateTime")) {
                 throw new \Ovh\Exceptions\InvalidParameterException("EndDateTime parameter must be a DateTime object");
             }
 
-            $parameters['creationDatetime.to'] = $endDateTime->format(\DateTime::RFC3339);
+            $parameters['creationDatetime.to'] = $dateEnd->format(\DateTime::RFC3339);
         }
 
         if (!is_null($sender)) {
@@ -495,7 +496,7 @@ class SmsApi
      * @param string $details Get senders' details or not
      *
      * @return array
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function getSenders($details = false)
     {
@@ -520,7 +521,7 @@ class SmsApi
      * @param string $details Get users details or not
      *
      * @return array
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function getUsers($details = false)
     {
@@ -545,7 +546,7 @@ class SmsApi
      * @param string $user User to get details
      *
      * @return mixed
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function getUserDetails($user)
     {
@@ -566,7 +567,7 @@ class SmsApi
      * @param string $sender Sender to get details
      *
      * @return mixed
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function getSenderDetails($sender)
     {
@@ -587,7 +588,7 @@ class SmsApi
      * @param string $account Account to work on
      *
      * @return void
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function setAccount($account)
     {
@@ -608,7 +609,7 @@ class SmsApi
      * @param string $user User to use
      *
      * @return void
-     * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
+     * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
     public function setUser($user)
     {

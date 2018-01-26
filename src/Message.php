@@ -46,7 +46,7 @@ class Message
     /**
      * SMS parent object
      *
-     * @var Ovh\Sms\SmsApi
+     * @var \Ovh\Sms\SmsApi
      */
     private $Sms = null;
 
@@ -88,7 +88,7 @@ class Message
     /**
      * Construct a new wrapper instance
      *
-     * @param Ovh\Sms $SmsApi Instance of Ovh\SmsApi
+     * @param \Ovh\Sms $SmsApi Instance of Ovh\SmsApi
      *
      * @throws \Ovh\Exceptions\InvalidParameterException if one parameter is missing or with bad value
      */
@@ -171,9 +171,10 @@ class Message
     /**
      * Set the delivery date of the message
      *
-     * @param dateTime $dateTime date when the message should be sent
+     * @param \dateTime $dateTime date when the message should be sent
      *
-     * @return void
+     * @return void     *
+     * @throws \Ovh\Exceptions\InvalidParameterException     if one parameter is missing or with bad value
      */
     public function setDeliveryDate($dateTime)
     {
